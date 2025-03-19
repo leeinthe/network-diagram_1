@@ -38,6 +38,9 @@ def draw_network():
         st.warning("네트워크에 추가된 사람이 없습니다.")
         return
     
+    # 기존 차트 초기화 (Streamlit 렌더링 오류 방지)
+    plt.clf()
+    
     contact_names = [c[0] for c in st.session_state.contacts]
     for contact in contact_names:
         G.add_node(contact)
