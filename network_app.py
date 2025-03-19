@@ -26,9 +26,7 @@ if st.sidebar.button("추가하기"):
             st.session_state.contacts.append((name, phone))
         if related_name and related_name in [c[0] for c in st.session_state.contacts]:
             st.session_state.edges.append((name, related_name, strength))
-        st.sidebar.success(f"{name} 추가 완료!")
-    else:
-        st.sidebar.error("이름과 전화번호를 입력하세요.")
+        st.rerun()
 
 # 네트워크 다이어그램 생성 함수
 def draw_network():
@@ -39,6 +37,7 @@ def draw_network():
         return
     
     # 기존 차트 초기화 (Streamlit 렌더링 오류 방지)
+    plt.figure(figsize=(5, 5))
     plt.clf()
     
     contact_names = [c[0] for c in st.session_state.contacts]
@@ -48,9 +47,7 @@ def draw_network():
     for edge in st.session_state.edges:
         G.add_edge(edge[0], edge[1], weight=edge[2])
     
-    plt.figure(figsize=(5, 5))
     pos = nx.spring_layout(G, seed=42)  # 동일한 레이아웃 유지
-    
     edges_weights = [edge[2] for edge in st.session_state.edges]
     nx.draw(G, pos, with_labels=True, node_color='lightblue', edge_color='black', font_family='Malgun Gothic', width=[w / 2 for w in edges_weights])
     nx.draw_networkx_edge_labels(G, pos, edge_labels={(edge[0], edge[1]): str(edge[2]) for edge in st.session_state.edges}, font_family='Malgun Gothic')
